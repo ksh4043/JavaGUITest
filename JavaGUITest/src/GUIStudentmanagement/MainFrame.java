@@ -1,9 +1,9 @@
 package GUIStudentmanagement;
 
 import java.awt.CardLayout;
+import java.awt.GridLayout;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
@@ -23,8 +23,17 @@ public class MainFrame extends JFrame {
 		JPanel inputPanel = createInputPanel();
 		JPanel searchPanel = createSearchPanel();
 		JPanel modifyPanel = createModifyPanel();
-		JPanel removePanel = createRemoePanel();
+		JPanel removePanel = createRemovePanel();
 		JPanel exitPanel = createExitPanel();
+		
+		mainPanel.add(menuPanel, "메뉴");
+		mainPanel.add(inputPanel, "입력");
+		mainPanel.add(searchPanel, "검색");
+		mainPanel.add(modifyPanel, "수정");
+		mainPanel.add(removePanel, "삭제");
+		mainPanel.add(exitPanel, "종료");
+		
+		add(mainPanel);
 	}
 
 	private JPanel createExitPanel() {
@@ -32,7 +41,7 @@ public class MainFrame extends JFrame {
 		return null;
 	}
 
-	private JPanel createRemoePanel() {
+	private JPanel createRemovePanel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -53,7 +62,16 @@ public class MainFrame extends JFrame {
 	}
 
 	private JPanel createMenuPanel() {
-		// TODO Auto-generated method stub
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(5, 1));
+		
+		JButton inputBtn = new JButton("학생 정보 입력");
+		JButton searchBtn = new JButton("학생 정보 검색");
+		JButton modifyBtn = new JButton("학생 정보 수정");
+		JButton removeBtn = new JButton("학생 정보 삭제");
+		JButton exitBtn = new JButton("프로그램 종료");
+		
+		
 		return null;
 	}
 
