@@ -57,8 +57,25 @@ public class MainFrame extends JFrame {
 	}
 
 	private JPanel createInputPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		JPanel panel = new JPanel(new GridLayout(8, 2));
+		JLabel nameLabel = new JLabel("이름 : ");
+		JTextField nameField = new JTextField();
+		JLabel majorLabel = new JLabel("학과 : ");
+		JTextField majorField = new JTextField();
+		JLabel sIdLabel = new JLabel("학번 : ");
+		JTextField sIdField = new JTextField();
+		JLabel pythonLabel = new JLabel("학번 : ");
+		JTextField pythonField = new JTextField();
+		JLabel javaLabel = new JLabel("학번 : ");
+		JTextField javaField = new JTextField();
+		JLabel dbLabel = new JLabel("학번 : ");
+		JTextField dbField = new JTextField();
+		JButton submitBtn = new JButton("입력 완료");
+        JButton backBtn = new JButton("뒤로 가기");
+        
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+		
+		return panel;
 	}
 
 	private JPanel createMenuPanel() {
@@ -73,7 +90,9 @@ public class MainFrame extends JFrame {
 		
 		inputBtn.addActionListener(e -> cardLayout.show(mainPanel, "입력"));
 		searchBtn.addActionListener(e -> cardLayout.show(mainPanel, "검색"));
-		
+		modifyBtn.addActionListener(e -> cardLayout.show(mainPanel, "수정"));
+		removeBtn.addActionListener(e -> cardLayout.show(mainPanel, "삭제"));
+		exitBtn.addActionListener(e -> cardLayout.show(mainPanel, "종료"));
 		
 		panel.add(inputBtn);
 		panel.add(searchBtn);
