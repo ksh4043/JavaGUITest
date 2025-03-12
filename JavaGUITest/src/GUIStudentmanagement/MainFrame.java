@@ -4,7 +4,7 @@ import java.awt.CardLayout;
 import java.awt.GridLayout;
 
 import javax.swing.*;
-
+// 화면 전환이 여러번 이루어지는 경우, 기능이 달라짐에 따라 메서드를 각각 정의하여 작성
 public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 	private JPanel mainPanel;
@@ -27,11 +27,11 @@ public class MainFrame extends JFrame {
 		JPanel exitPanel = createExitPanel();
 		
 		mainPanel.add(menuPanel, "메뉴");
-		mainPanel.add(inputPanel, "입력");
-		mainPanel.add(searchPanel, "검색");
-		mainPanel.add(modifyPanel, "수정");
-		mainPanel.add(removePanel, "삭제");
-		mainPanel.add(exitPanel, "종료");
+		//mainPanel.add(inputPanel, "입력");
+		//mainPanel.add(searchPanel, "검색");
+		//mainPanel.add(modifyPanel, "수정");
+		//mainPanel.add(removePanel, "삭제");
+		//mainPanel.add(exitPanel, "종료");
 		
 		add(mainPanel);
 	}
@@ -71,8 +71,17 @@ public class MainFrame extends JFrame {
 		JButton removeBtn = new JButton("학생 정보 삭제");
 		JButton exitBtn = new JButton("프로그램 종료");
 		
+		inputBtn.addActionListener(e -> cardLayout.show(mainPanel, "입력"));
+		searchBtn.addActionListener(e -> cardLayout.show(mainPanel, "검색"));
 		
-		return null;
+		
+		panel.add(inputBtn);
+		panel.add(searchBtn);
+		panel.add(modifyBtn);
+		panel.add(removeBtn);
+		panel.add(exitBtn);
+		
+		return panel;
 	}
 
 }
