@@ -24,4 +24,8 @@ public class StudentManager {
 	public Student modifyStudent() {
 		return null;
 	}
+	
+	public List<Student> removeStudent(){
+		return new ArrayList<>();
+	}
 }

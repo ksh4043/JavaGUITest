@@ -10,7 +10,7 @@ public class JavaGUITest extends JFrame {
 	private CardLayout cardLayout;
     private JPanel mainPanel;
     
-    // JavaGUITest() 생성자
+    // JavaGUITest()
     public JavaGUITest() {
         setTitle("학생 성적 관리 프로그램");
         setSize(400, 300);
@@ -20,17 +20,17 @@ public class JavaGUITest extends JFrame {
         cardLayout = new CardLayout();	// 화면 전환을 위한 cardLayout 객체 생성
         mainPanel = new JPanel(cardLayout);	// 실제로 화면 전환이 이루어질 진짜 화면 객체
 
-        // 화면 추가
+        // 화면 생성
         JPanel menuPanel = createMenuPanel();
         JPanel inputPanel = createInputPanel();
-
+        // 화면 추가
         mainPanel.add(menuPanel, "메뉴");	// cardLayout은 배열이나 리스트와 비슷한 개념이기 때문에 먼저 들어간 menuPanel이 초기화면(0번 index)으로 잡힘
         mainPanel.add(inputPanel, "입력");
 
         add(mainPanel);	// frame(화면)에 생성한 mainPanel을 추가하여 보여줌
     }
 
-    // JPanel 타입의 createMenuPanel() 생성자 메서드
+    // JPanel 타입의 createMenuPanel() 메서드
     private JPanel createMenuPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1));
