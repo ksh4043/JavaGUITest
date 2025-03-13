@@ -28,4 +28,8 @@ public class StudentManager {
 	public List<Student> removeStudent(){
 		return new ArrayList<>();
 	}
+	
+	public boolean isValid() {
+		return false;
+	}
 }
