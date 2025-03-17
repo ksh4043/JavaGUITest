@@ -2,13 +2,23 @@ package GUIStudentmanagement;
 
 import java.awt.CardLayout;
 import java.awt.GridLayout;
+import java.util.List;
 
 import javax.swing.*;
 // 화면 전환이 여러번 이루어지는 경우, 기능이 달라짐에 따라 메서드를 각각 정의하여 작성
 public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 	private JPanel mainPanel;
-	private StudentManager stdM;
+	private StudentManager stdM = new StudentManager();
+	private List<Student> students;
+	private JPanel menuPanel;
+	private JPanel inputPanel;
+	private JPanel searchPanel;
+	private JPanel modifyPanel;
+	private JPanel removePanel;
+	private JPanel exitPanel;
+	private JPanel unvalidPanel;
+	private JPanel inputSeccessPanel;
 	
 	public MainFrame() {
 		// GUI 화면을 구현함
@@ -20,12 +30,14 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		mainPanel = new JPanel(cardLayout);
 		
-		JPanel menuPanel = createMenuPanel();
-		JPanel inputPanel = createInputPanel();
-		JPanel searchPanel = createSearchPanel();
-		JPanel modifyPanel = createModifyPanel();
-		JPanel removePanel = createRemovePanel();
-		JPanel exitPanel = createExitPanel();
+		menuPanel = createMenuPanel();
+		inputPanel = createInputPanel();
+		searchPanel = createSearchPanel();
+		modifyPanel = createModifyPanel();
+		removePanel = createRemovePanel();
+		exitPanel = createExitPanel();
+		unvalidPanel = createUnvP();
+		inputSeccessPanel = createInputSccess();
 		
 		mainPanel.add(menuPanel, "메뉴");
 		mainPanel.add(inputPanel, "입력");
@@ -33,94 +45,12 @@ public class MainFrame extends JFrame {
 		mainPanel.add(modifyPanel, "수정");
 		mainPanel.add(removePanel, "삭제");
 		mainPanel.add(exitPanel, "종료");
+		mainPanel.add(unvalidPanel, "입력 오류");
+		mainPanel.add(inputSeccessPanel, "입력 성공");
 		
 		add(mainPanel);
 	}
-
-	private JPanel createExitPanel() {
-		JPanel panel = new JPanel(new GridLayout(2,1));
-		JLabel messageLabel = new JLabel("프로그램을 종료합니다.");
-		JButton cfBtn = new JButton("확인");
-		
-		cfBtn.addActionListener(e -> System.exit(0));
-		
-		panel.add(messageLabel);
-		panel.add(cfBtn);
-		
-		return panel;
-	}
-
-	private JPanel createRemovePanel() {
-		JPanel panel = createSearchPanel();
-		// 삭제를 위한 메서드 추가 또는 호출 이후 패널을 return
-		
-		return panel;
-	}
-
-	private JPanel createModifyPanel() {
-		JPanel panel = createSearchPanel();
-		// 수정을 위한 메서드 추가 또는 호출 이후 패널을 return
-		
-		return panel;
-	}
-
-	private JPanel createSearchPanel() {
-		JPanel panel = new JPanel(new GridLayout(2,2));
-		JLabel sIdLabel = new JLabel("학번 : ");
-		JTextField sIdField = new JTextField();
-		JButton submitBtn = new JButton("입력 완료");
-        JButton backBtn = new JButton("뒤로 가기");
-        
-        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
-        
-        panel.add(sIdLabel);
-        panel.add(sIdField);
-        panel.add(submitBtn);
-        panel.add(backBtn);
-		
-		return panel;
-	}
-
-	private JPanel createInputPanel() {
-		JPanel panel = new JPanel(new GridLayout(7, 2));
-		JLabel nameLabel = new JLabel("이름 : ");
-		JTextField nameField = new JTextField();
-		JLabel majorLabel = new JLabel("학과 : ");
-		JTextField majorField = new JTextField();
-		JLabel sIdLabel = new JLabel("학번 : ");
-		JTextField sIdField = new JTextField();
-		JLabel pythonLabel = new JLabel("파이썬 점수 : ");
-		JTextField pythonField = new JTextField();
-		JLabel javaLabel = new JLabel("자바 점수 : ");
-		JTextField javaField = new JTextField();
-		JLabel dbLabel = new JLabel("DB 점수 : ");
-		JTextField dbField = new JTextField();
-		JButton submitBtn = new JButton("입력 완료");
-        JButton backBtn = new JButton("뒤로 가기");
-        
-        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
-        
-        // 학번 검사 및 데이터 유효성 검사
-        submitBtn.addActionListener(e -> stdM.isValid());
-        
-        panel.add(nameLabel);		
-        panel.add(nameField);
-        panel.add(majorLabel);
-        panel.add(majorField);
-        panel.add(sIdLabel);
-        panel.add(sIdField);
-        panel.add(pythonLabel);
-        panel.add(pythonField);
-        panel.add(javaLabel);
-        panel.add(javaField);
-        panel.add(dbLabel);
-        panel.add(dbField);
-        panel.add(submitBtn);
-        panel.add(backBtn);
-        
-		return panel;
-	}
-
+	
 	private JPanel createMenuPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(5, 1));
@@ -145,5 +75,138 @@ public class MainFrame extends JFrame {
 		
 		return panel;
 	}
+	
+	private JPanel createInputPanel() {
+		JPanel panel = new JPanel(new GridLayout(7, 2));
+		JLabel nameLabel = new JLabel("이름 : ");
+		JTextField nameField = new JTextField();
+		JLabel majorLabel = new JLabel("학과 : ");
+		JTextField majorField = new JTextField();
+		JLabel sIdLabel = new JLabel("학번 : ");
+		JTextField sIdField = new JTextField();
+		JLabel pythonLabel = new JLabel("파이썬 점수 : ");
+		JTextField pythonField = new JTextField();
+		JLabel javaLabel = new JLabel("자바 점수 : ");
+		JTextField javaField = new JTextField();
+		JLabel dbLabel = new JLabel("DB 점수 : ");
+		JTextField dbField = new JTextField();
+		JButton submitBtn = new JButton("입력 완료");
+        JButton backBtn = new JButton("뒤로 가기");
+                
+        // 학번 검사 및 데이터 유효성 검사
+        submitBtn.addActionListener(e -> {
+        	Student student = stdM.addStudent(nameField.getText(), sIdField.getText(), majorField.getText(), pythonField.getText(), javaField.getText(), dbField.getText());
+        	// student 객체가 null 인 경우, 비정상적인 데이터 입력이므로 재입력을 요구하거나 작업을 취소함
+        	if(student == null) {
+        		cardLayout.show(mainPanel, "입력 오류");
+        	}else {
+        		// null 이 아닌 경우, 정상적인 입력이므로 입력된 학생의 정보를 한번 보여줌
+        		cardLayout.show(mainPanel, "입력 성공");
+        		System.out.println("Success Test");
+        		System.out.println(student.getStudentName() + " " + student.getStudentId() + " " + student.getMajor() + " " + student.getPython() + " " + student.getJava() + " " + student.getDb());
+        	}
+        });
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+        
+        panel.add(nameLabel);		
+        panel.add(nameField);
+        panel.add(majorLabel);
+        panel.add(majorField);
+        panel.add(sIdLabel);
+        panel.add(sIdField);
+        panel.add(pythonLabel);
+        panel.add(pythonField);
+        panel.add(javaLabel);
+        panel.add(javaField);
+        panel.add(dbLabel);
+        panel.add(dbField);
+        panel.add(submitBtn);
+        panel.add(backBtn);
+        
+		return panel;
+	}
+	
+	private JPanel createSearchPanel() {
+		JPanel panel = new JPanel(new GridLayout(2,2));
+		JLabel sIdLabel = new JLabel("학번 : ");
+		JTextField sIdField = new JTextField();
+		JButton submitBtn = new JButton("입력 완료");
+        JButton backBtn = new JButton("뒤로 가기");
+        
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+        
+        panel.add(sIdLabel);
+        panel.add(sIdField);
+        panel.add(submitBtn);
+        panel.add(backBtn);
+		
+		return panel;
+	}
+	
+	private JPanel createModifyPanel() {
+		JPanel panel = createSearchPanel();
+		// 수정을 위한 메서드 추가 또는 호출 이후 패널을 return
+		
+		return panel;
+	}
+	
+	private JPanel createRemovePanel() {
+		JPanel panel = createSearchPanel();
+		// 삭제를 위한 메서드 추가 또는 호출 이후 패널을 return
+		
+		return panel;
+	}
 
+	private JPanel createExitPanel() {
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		JLabel messageLabel = new JLabel("프로그램을 종료합니다.");
+		JButton cfBtn = new JButton("확인");
+		
+		cfBtn.addActionListener(e -> System.exit(0));
+		
+		panel.add(messageLabel);
+		panel.add(cfBtn);
+		
+		return panel;
+	}
+
+	private JPanel createUnvP() {
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		JLabel label = new JLabel("잘못된 입력입니다. 다시 입력하여 주십시오.");
+		JButton btn = new JButton("확인");
+		
+		btn.addActionListener(e -> {
+			resetInputPanel();
+			cardLayout.show(mainPanel, "입력");
+		});
+		
+		panel.add(label);
+		panel.add(btn);
+		
+		return panel;
+	}
+
+	// 입력 화면을 초기화
+	private void resetInputPanel() {
+		if (inputPanel != null) {
+	        mainPanel.remove(inputPanel);
+	    }
+
+	    inputPanel = createInputPanel();
+	    mainPanel.add(inputPanel, "입력");
+
+	    // revalidate -> [JPanel의 컴포넌트가 추가/제거 되는 경우, repaint -> UI를 다시 그림(단순 재호출)] -> 갱신시키는 역할
+	    mainPanel.revalidate();
+	    mainPanel.repaint();
+	}
+	
+	private JPanel createInputSccess() {
+		JPanel panel = new JPanel(new GridLayout(3,1));
+		JLabel label = new JLabel("학생 정보 입력 성공!");
+		JButton btn = new JButton("확인");
+		
+		btn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+		
+		return panel;
+	}
 }
