@@ -13,7 +13,7 @@ public class StudentManager {
 		// 학번 검사 분기점
 		if(isStd(stdId, students)) {
 			System.out.println("학생 정보 존재하지 않음. 데이터 유효성 검사 실시!");
-			// 데이터 유효성 검사
+			// 데이터 유효성 검사 -> 점수 데이터의 타입 체크
 			try {
 				pythonInt = Integer.parseInt(Python);
 				javaInt = Integer.parseInt(Java);
@@ -23,7 +23,7 @@ public class StudentManager {
 				System.out.println("잘못된 입력임");
 				return null;
 			}
-			
+			// 점수 데이터의 유효성 검사 0점 미만과 100점 초과의 점수는 들어올 수 없게함.
 			if((pythonInt > 100 || javaInt > 100 || dbInt > 100) || (pythonInt < 0 || javaInt < 0 || dbInt < 0)) {
 				System.out.println("점수는 0점 미만이거나 100점 보다 클 수 없습니다.");
 				return null;
@@ -38,13 +38,13 @@ public class StudentManager {
 		return student;
 	}
 	
-	public boolean searchStudent(String stdId, List<Student> studentList) {
-		for (Student s : studentList) {
+	public Student searchStudent(String stdId) {
+		for (Student s : students) {
 			if (s.getStudentId().equals(stdId)) {
-				return true;
+				return s;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public Student modifyStudent() {

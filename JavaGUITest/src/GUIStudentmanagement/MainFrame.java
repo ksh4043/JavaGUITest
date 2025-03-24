@@ -1,6 +1,7 @@
 package GUIStudentmanagement;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.List;
 
@@ -10,7 +11,6 @@ public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 	private JPanel mainPanel;
 	private StudentManager stdM = new StudentManager();
-	private List<Student> students;
 	private JPanel menuPanel;
 	private JPanel inputPanel;
 	private JPanel searchPanel;
@@ -19,6 +19,8 @@ public class MainFrame extends JFrame {
 	private JPanel exitPanel;
 	private JPanel unvalidPanel;
 	private JPanel inputSeccessPanel;
+	private JPanel searchSuccessPanel;
+	private JPanel searchFailPanel;
 	
 	public MainFrame() {
 		// GUI 화면을 구현함
@@ -38,6 +40,8 @@ public class MainFrame extends JFrame {
 		exitPanel = createExitPanel();
 		unvalidPanel = createUnvP();
 		inputSeccessPanel = createInputSccess();
+		searchSuccessPanel = createSearchSuccess();
+		searchFailPanel = createSearchFail();
 		
 		mainPanel.add(menuPanel, "메뉴");
 		mainPanel.add(inputPanel, "입력");
@@ -47,6 +51,8 @@ public class MainFrame extends JFrame {
 		mainPanel.add(exitPanel, "종료");
 		mainPanel.add(unvalidPanel, "입력 오류");
 		mainPanel.add(inputSeccessPanel, "입력 성공");
+		mainPanel.add(searchSuccessPanel, "검색 성공");
+		mainPanel.add(searchFailPanel, "검색 실패");
 		
 		add(mainPanel);
 	}
@@ -134,6 +140,17 @@ public class MainFrame extends JFrame {
         JButton backBtn = new JButton("뒤로 가기");
         
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+        submitBtn.addActionListener(e -> {
+        	Student student = stdM.searchStudent(sIdField.getText());
+        	if(student == null) {
+        		// 검색에 실패했을 경우
+        		cardLayout.show(mainPanel, "검색 실패");
+        	}else {
+        		// 검색에 성공해서 학생 정보가 넘어왔을 경우
+        		printStudent(student);
+        		cardLayout.show(mainPanel, "검색 성공");
+        	}
+        });
         
         panel.add(sIdLabel);
         panel.add(sIdField);
@@ -142,7 +159,7 @@ public class MainFrame extends JFrame {
 		
 		return panel;
 	}
-	
+
 	private JPanel createModifyPanel() {
 		JPanel panel = createSearchPanel();
 		// 수정을 위한 메서드 추가 또는 호출 이후 패널을 return
@@ -207,6 +224,49 @@ public class MainFrame extends JFrame {
 		
 		btn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
 		
+		panel.add(label);
+		panel.add(btn);
+		
 		return panel;
+	}
+	
+	private JPanel createSearchFail() {
+		// 검색 실패 화면
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		JLabel label = new JLabel("해당 학번의 학생 정보가 존재하지 않습니다!");
+		JButton btn = new JButton("확인");
+		
+		btn.addActionListener(e -> cardLayout.show(mainPanel, "검색"));
+		
+		panel.add(label);
+		panel.add(btn);
+		
+		return panel;
+	}
+
+	private JPanel createSearchSuccess() {
+		// 검색 성공 화면
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		JLabel label = new JLabel("");
+		JButton btn = new JButton("확인");
+		
+		btn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+		
+		panel.add(label);
+		panel.add(btn);
+		
+		return panel;
+	}
+	
+	private void printStudent(Student student) {
+		// 검색 성공 시 학생 정보를 출력해주는 작업 -> 필드 화면에 데이터를 집어 넣을 것임
+		JPanel panel = getSrsP();
+		JLabel label = (JLabel)panel.getComponent(0);
+		//System.out.println(panel.getComponentCount());
+		label.setText("이름 : " + student.getStudentName() + " 학번 : " + student.getStudentId() + " 학과 : " + student.getMajor() + " 파이썬 : " + student.getPython() + " 자바 : " + student.getJava() + " DB : " + student.getDb());
+	}
+
+	private JPanel getSrsP() {
+		return searchSuccessPanel;
 	}
 }
