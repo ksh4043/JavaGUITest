@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
 	private JPanel inputSeccessPanel;
 	private JPanel searchSuccessPanel;
 	private JPanel searchFailPanel;
+	private JPanel choiceSub;
 	
 	public MainFrame() {
 		// GUI 화면을 구현함
@@ -40,6 +41,7 @@ public class MainFrame extends JFrame {
 		inputSeccessPanel = createInputSccess();
 		searchSuccessPanel = createSearchSuccess();
 		searchFailPanel = createSearchFail();
+		choiceSub = createChoiceSub();
 		
 		mainPanel.add(menuPanel, "메뉴");
 		mainPanel.add(inputPanel, "입력");
@@ -51,6 +53,7 @@ public class MainFrame extends JFrame {
 		mainPanel.add(inputSeccessPanel, "입력 성공");
 		mainPanel.add(searchSuccessPanel, "검색 성공");
 		mainPanel.add(searchFailPanel, "검색 실패");
+		mainPanel.add(choiceSub, "과목 선택");
 		
 		add(mainPanel);
 	}
@@ -145,6 +148,7 @@ public class MainFrame extends JFrame {
         		cardLayout.show(mainPanel, "검색 실패");
         	}else {
         		// 검색에 성공해서 학생 정보가 넘어왔을 경우
+        		// 학생 정보 출력 화면으로 전환
         		printStudent(student);
         		cardLayout.show(mainPanel, "검색 성공");
         	}
@@ -159,12 +163,36 @@ public class MainFrame extends JFrame {
 	}
 
 	private JPanel createModifyPanel() {
-		JPanel panel = createSearchPanel();
-		// 수정을 위한 메서드 추가 또는 호출 이후 패널을 return
+		JPanel panel = new JPanel(new GridLayout(2,2));
+		JLabel sIdLabel = new JLabel("학번 : ");
+		JTextField sIdField = new JTextField();
+		JButton submitBtn = new JButton("입력 완료");
+        JButton backBtn = new JButton("뒤로 가기");
+        
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+        submitBtn.addActionListener(e -> {
+        	Student student = stdM.searchStudent(sIdField.getText());
+        	if(student == null) {
+        		// 검색에 실패했을 경우
+        		cardLayout.show(mainPanel, "검색 실패");
+        	}else {
+        		/*
+        		 * 검색 성공
+        		 * 정상 값 확인 시 operModify 실행
+        		 */
+        		operModify(student);
+        		cardLayout.show(mainPanel, "과목 선택");
+        	}
+        });
+        
+        panel.add(sIdLabel);
+        panel.add(sIdField);
+        panel.add(submitBtn);
+        panel.add(backBtn);
 		
 		return panel;
 	}
-	
+
 	private JPanel createRemovePanel() {
 		JPanel panel = createSearchPanel();
 		// 삭제를 위한 메서드 추가 또는 호출 이후 패널을 return
@@ -216,6 +244,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	private JPanel createInputSccess() {
+		resetInputPanel();
 		JPanel panel = new JPanel(new GridLayout(3,1));
 		JLabel label = new JLabel("학생 정보 입력 성공!");
 		JButton btn = new JButton("확인");
@@ -234,7 +263,7 @@ public class MainFrame extends JFrame {
 		JLabel label = new JLabel("해당 학번의 학생 정보가 존재하지 않습니다!");
 		JButton btn = new JButton("확인");
 		
-		btn.addActionListener(e -> cardLayout.show(mainPanel, "검색"));
+		btn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
 		
 		panel.add(label);
 		panel.add(btn);
@@ -256,15 +285,54 @@ public class MainFrame extends JFrame {
 		return panel;
 	}
 	
+	private JPanel createChoiceSub() {
+		JPanel panel = new JPanel(new GridLayout(4, 2));
+		JLabel pythonLabel = new JLabel("파이썬 점수 : ");
+		JTextField pythonField = new JTextField();
+		JLabel javaLabel = new JLabel("자바 점수 : ");
+		JTextField javaField = new JTextField();
+		JLabel dbLabel = new JLabel("DB 점수 : ");
+		JTextField dbField = new JTextField();
+		JButton submitBtn = new JButton("입력 완료");
+		
+        panel.add(pythonLabel);
+        panel.add(pythonField);
+        panel.add(javaLabel);
+        panel.add(javaField);
+        panel.add(dbLabel);
+        panel.add(dbField);
+        panel.add(submitBtn);
+		
+		return panel;
+	}
+	
 	private void printStudent(Student student) {
 		// 검색 성공 시 학생 정보를 출력해주는 작업 -> 필드 화면에 데이터를 집어 넣을 것임
-		JPanel panel = getSrsP();
+		JPanel panel = searchSuccessPanel;
 		JLabel label = (JLabel)panel.getComponent(0);
-		//System.out.println(panel.getComponentCount());
 		label.setText("이름 : " + student.getStudentName() + " 학번 : " + student.getStudentId() + " 학과 : " + student.getMajor() + " 파이썬 : " + student.getPython() + " 자바 : " + student.getJava() + " DB : " + student.getDb());
 	}
-
-	private JPanel getSrsP() {
-		return searchSuccessPanel;
+	
+	private void operModify(Student student) {
+		JPanel panel = choiceSub;
+		JButton btn = (JButton)panel.getComponent(6);
+		JTextField pythonField = (JTextField)panel.getComponent(1);
+		JTextField javaField = (JTextField)panel.getComponent(3);
+		JTextField dbField = (JTextField)panel.getComponent(5);
+		String python = pythonField.getText();
+		String java = javaField.getText();
+		String db = dbField.getText();
+		
+		btn.addActionListener(e -> {
+			boolean result = stdM.modifyStudent(student, python, java, db);
+			if(result) {
+				printStudent(student);
+				cardLayout.show(mainPanel, "검색 성공");
+			}else {
+				cardLayout.show(mainPanel, "검색 실패");
+			}
+		});
+		
 	}
+
 }

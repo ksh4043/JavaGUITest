@@ -50,8 +50,26 @@ public class StudentManager {
 		return null;
 	}
 	
-	public Student modifyStudent() {
-		return null;
+	public boolean modifyStudent(Student student, String python, String java, String db) {
+		int pythonInt = 0;
+		int javaInt = 0;
+		int dbInt = 0;
+		
+		try {
+			pythonInt = Integer.parseInt(python);
+			javaInt = Integer.parseInt(java);
+			dbInt = Integer.parseInt(db);
+		} catch (NumberFormatException e) {
+			System.out.println("잘못된 입력임");
+			return false;
+		}
+		
+		student.setPython(pythonInt);
+		student.setJava(javaInt);
+		student.setDB(dbInt);
+		
+		System.out.println("일단 여기까지는 성공");
+		return true;
 	}
 	
 	public List<Student> removeStudent(){

@@ -45,4 +45,19 @@ public class Student {
 	public String toString() {
 		return "이름 : " + name + ", 학번 : " + stdId + ", 학과 : " + major + ", 파이썬 점수 : " + Python + ", 자바 점수 : " + Java + ", DB 점수 : " + db;
 	}
+
+	public void setPython(int pythonInt) {
+		this.Python = pythonInt;
+		
+	}
+
+	public void setJava(int javaInt) {
+		this.Java = javaInt;
+		
+	}
+
+	public void setDB(int dbInt) {
+		this.db = dbInt;
+		
+	}
 }
