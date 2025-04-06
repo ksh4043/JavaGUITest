@@ -1,9 +1,7 @@
 package GUIStudentmanagement;
 
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.GridLayout;
-import java.util.List;
 
 import javax.swing.*;
 // 화면 전환이 여러번 이루어지는 경우, 기능이 달라짐에 따라 메서드를 각각 정의하여 작성
@@ -98,7 +96,7 @@ public class MainFrame extends JFrame {
 		JTextField dbField = new JTextField();
 		JButton submitBtn = new JButton("입력 완료");
         JButton backBtn = new JButton("뒤로 가기");
-                
+        
         // 학번 검사 및 데이터 유효성 검사
         submitBtn.addActionListener(e -> {
         	Student student = stdM.addStudent(nameField.getText(), sIdField.getText(), majorField.getText(), pythonField.getText(), javaField.getText(), dbField.getText());
