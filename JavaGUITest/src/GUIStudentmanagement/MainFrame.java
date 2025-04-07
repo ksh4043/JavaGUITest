@@ -19,7 +19,10 @@ public class MainFrame extends JFrame {
 	private JPanel inputSeccessPanel;
 	private JPanel searchSuccessPanel;
 	private JPanel searchFailPanel;
-	private JPanel choiceSub;
+	private JPanel modifySub;
+	private JPanel successRemove;
+	private JPanel failRemove;
+	private JPanel failModify;
 	
 	public MainFrame() {
 		// GUI 화면을 구현함
@@ -41,7 +44,10 @@ public class MainFrame extends JFrame {
 		inputSeccessPanel = createInputSccess();
 		searchSuccessPanel = createSearchSuccess();
 		searchFailPanel = createSearchFail();
-		choiceSub = createChoiceSub();
+		modifySub = createChoiceSub();
+		successRemove = createSuccessRemove();
+		failRemove = createFailRemove();
+		failModify = createFailModify();
 		
 		mainPanel.add(menuPanel, "메뉴");
 		mainPanel.add(inputPanel, "입력");
@@ -53,7 +59,10 @@ public class MainFrame extends JFrame {
 		mainPanel.add(inputSeccessPanel, "입력 성공");
 		mainPanel.add(searchSuccessPanel, "검색 성공");
 		mainPanel.add(searchFailPanel, "검색 실패");
-		mainPanel.add(choiceSub, "과목 선택");
+		mainPanel.add(modifySub, "수정 화면");
+		mainPanel.add(successRemove, "삭제 성공");
+		mainPanel.add(failRemove, "삭제 실패");
+		mainPanel.add(failModify, "수정 실패");
 		
 		add(mainPanel);
 	}
@@ -173,15 +182,10 @@ public class MainFrame extends JFrame {
         submitBtn.addActionListener(e -> {
         	Student student = stdM.searchStudent(sIdField.getText());
         	if(student == null) {
-        		// 검색에 실패했을 경우
         		cardLayout.show(mainPanel, "검색 실패");
         	}else {
-        		/*
-        		 * 검색 성공
-        		 * 정상 값 확인 시 operModify 실행
-        		 */
         		operModify(student);
-        		cardLayout.show(mainPanel, "과목 선택");
+        		cardLayout.show(mainPanel, "수정 화면");
         	}
         });
         
@@ -194,8 +198,31 @@ public class MainFrame extends JFrame {
 	}
 
 	private JPanel createRemovePanel() {
-		JPanel panel = createSearchPanel();
-		// 삭제를 위한 메서드 추가 또는 호출 이후 패널을 return
+		JPanel panel = new JPanel(new GridLayout(2,2));
+		JLabel sIdLabel = new JLabel("학번 : ");
+		JTextField sIdField = new JTextField();
+		JButton submitBtn = new JButton("입력 완료");
+        JButton backBtn = new JButton("뒤로 가기");
+        
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+        submitBtn.addActionListener(e -> {
+        	Student student = stdM.searchStudent(sIdField.getText());
+        	if(student == null) {
+        		cardLayout.show(mainPanel, "검색 실패");
+        	}else {
+        		boolean result = stdM.removeStudent(student);
+        		if(result) {
+        			cardLayout.show(mainPanel, "삭제 성공");
+        		}else {
+        			cardLayout.show(mainPanel, "삭제 실패");
+        		}
+        	}
+        });
+        
+        panel.add(sIdLabel);
+        panel.add(sIdField);
+        panel.add(submitBtn);
+        panel.add(backBtn);
 		
 		return panel;
 	}
@@ -306,6 +333,45 @@ public class MainFrame extends JFrame {
 		return panel;
 	}
 	
+	private JPanel createSuccessRemove() {
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		JLabel label = new JLabel("삭제 성공");
+		JButton btn = new JButton("확인");
+		
+		btn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+		
+		panel.add(label);
+		panel.add(btn);
+		
+		return panel;
+	}
+	
+	private JPanel createFailRemove() {
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		JLabel label = new JLabel("삭제 실패");
+		JButton btn = new JButton("확인");
+		
+		btn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+		
+		panel.add(label);
+		panel.add(btn);
+		
+		return panel;
+	}
+	
+	private JPanel createFailModify() {
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		JLabel label = new JLabel("잘못된 점수를 입력하셨습니다");
+		JButton btn = new JButton("확인");
+		
+		btn.addActionListener(e -> cardLayout.show(mainPanel, "메뉴"));
+		
+		panel.add(label);
+		panel.add(btn);
+		
+		return panel;
+	}
+	
 	private void printStudent(Student student) {
 		// 검색 성공 시 학생 정보를 출력해주는 작업 -> 필드 화면에 데이터를 집어 넣을 것임
 		JPanel panel = searchSuccessPanel;
@@ -314,7 +380,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void operModify(Student student) {
-		JPanel panel = choiceSub;
+		JPanel panel = modifySub;
 		JButton btn = (JButton)panel.getComponent(6);
 		JTextField pythonField = (JTextField)panel.getComponent(1);
 		JTextField javaField = (JTextField)panel.getComponent(3);
@@ -329,7 +395,7 @@ public class MainFrame extends JFrame {
 				printStudent(student);
 				cardLayout.show(mainPanel, "검색 성공");
 			}else {
-				cardLayout.show(mainPanel, "검색 실패");
+				cardLayout.show(mainPanel, "수정 실패");
 			}
 		});
 		

@@ -72,8 +72,13 @@ public class StudentManager {
 		return true;
 	}
 	
-	public List<Student> removeStudent(){
-		return new ArrayList<>();
+	public boolean removeStudent(Student student){
+		if(students == null) {
+			return false;
+		}
+		students.remove(student);
+		
+		return true;
 	}
 	
 //	public boolean isValid() {
