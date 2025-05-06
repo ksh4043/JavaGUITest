@@ -385,12 +385,12 @@ public class MainFrame extends JFrame {
 		JTextField pythonField = (JTextField)panel.getComponent(1);
 		JTextField javaField = (JTextField)panel.getComponent(3);
 		JTextField dbField = (JTextField)panel.getComponent(5);
-		String python = pythonField.getText();
-		String java = javaField.getText();
-		String db = dbField.getText();
+//		String python = pythonField.getText().trim();
+//		String java = javaField.getText().trim();
+//		String db = dbField.getText().trim();
 		
 		btn.addActionListener(e -> {
-			boolean result = stdM.modifyStudent(student, python, java, db);
+			boolean result = stdM.modifyStudent(student, pythonField.getText(), javaField.getText(), dbField.getText());
 			if(result) {
 				printStudent(student);
 				cardLayout.show(mainPanel, "검색 성공");
